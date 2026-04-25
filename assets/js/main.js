@@ -125,10 +125,11 @@
         el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
       });
 
-      // Subtle bg shift on hero
+      // Subtle bg shift on hero — keep scale at 1 so background-size:contain
+      // stays accurate and the banner art is fully visible.
       const heroBg = document.querySelector(".hero__bg");
       if (heroBg) {
-        heroBg.style.transform = `scale(1.05) translate3d(${px * -10}px, ${py * -10}px, 0)`;
+        heroBg.style.transform = `translate3d(${px * -8}px, ${py * -8}px, 0)`;
       }
 
       requestAnimationFrame(loop);
@@ -488,15 +489,29 @@
 
       const subject = `[KRAVVY] ${topic} — ${name}`;
       const body = `Name: ${name}\nEmail: ${email}\nReason: ${topic}\n\n${message}\n\n— Sent via kravvy.com`;
-      const mailto = `mailto:support@kravvy.com?subject=${encodeURIComponent(
-        subject
-      )}&body=${encodeURIComponent(body)}`;
 
-      if (status) {
-        status.textContent = "OPENING YOUR MAIL CLIENT…";
-        status.className = "contact__status is-success";
+      // Gmail compose in a new tab — works without a registered mail handler.
+      const gmailUrl =
+        "https://mail.google.com/mail/?view=cm&fs=1" +
+        "&to=" + encodeURIComponent("support@kravvy.com") +
+        "&su=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+      const win = window.open(gmailUrl, "_blank", "noopener,noreferrer");
+
+      if (win) {
+        if (status) {
+          status.textContent = "OPENING GMAIL…";
+          status.className = "contact__status is-success";
+        }
+      } else {
+        // Popup blocked — fall back to a same-tab navigation user can confirm.
+        if (status) {
+          status.textContent = "POPUP BLOCKED — REDIRECTING…";
+          status.className = "contact__status is-success";
+        }
+        window.location.href = gmailUrl;
       }
-      window.location.href = mailto;
     });
   }
 
