@@ -1,18 +1,24 @@
 const SHOP = "kravvy.myshopify.com";
-const CLIENT_ID = process.env.SHOPIFY_ADMIN_CLIENT_ID;
-const CLIENT_SECRET = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
 
 async function getAccessToken() {
+    const clientId = process.env.SHOPIFY_ADMIN_CLIENT_ID;
+    const clientSecret = process.env.SHOPIFY_ADMIN_CLIENT_SECRET;
+    if (!clientId || !clientSecret) {
+        throw new Error(
+            'SHOPIFY_ADMIN_CLIENT_ID and SHOPIFY_ADMIN_CLIENT_SECRET must be set'
+        );
+    }
+
     const url = `https://${SHOP}/admin/oauth/access_token`;
-    const payload = {
+    const payload: Record<string, string> = {
         grant_type: "client_credentials",
-        client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET
+        client_id: clientId,
+        client_secret: clientSecret,
     };
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(payload)
+        body: new URLSearchParams(payload),
     });
     const data = await response.json();
     return data.access_token;
