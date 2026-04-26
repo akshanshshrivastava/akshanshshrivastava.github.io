@@ -1,57 +1,36 @@
-# KRAVVY — Own Your Vibe
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A premium streetwear "coming soon" landing page with an interactive T-shirt customizer.
+## Getting Started
 
-> Built different. Worn by you.
-
-## Stack
-
-- Vanilla **HTML / CSS / JavaScript** — zero build step.
-- Hosted on **GitHub Pages** (`kravvy.github.io`).
-- Fonts via Google Fonts (`Bebas Neue`, `Inter`, `Share Tech Mono`, `Noto Sans JP`).
-
-## Features
-
-- **Hero** — KRAVVY logo over banner artwork, glitching `COMING SOON`, parallax cursor reaction, live countdown timer (days / hours / minutes / seconds).
-- **T-Shirt Customizer** — men's oversized + women's fitted SVG mockups with:
-  - 3D mouse-tilt + neon glow on hover
-  - 5 colorways (Bone, Obsidian, Volt, Violet, Blood)
-  - `Randomize Design` button — generates fresh graphic overlays on both shirts
-- **Floating ornaments** — clothing tags, barcode, kanji, abstract glyphs that drift in the background.
-- **Glassmorphism contact card** — name / email / dropdown / message → `mailto:support@kravvy.com`.
-- **Custom cursor** with a soft glow trail, scanlines and grain overlays, and subtle reveal-on-scroll.
-- Fully responsive and respects `prefers-reduced-motion`.
-
-## Local development
-
-Just open the file:
+First, run the development server:
 
 ```bash
-open index.html
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Or serve with anything (recommended for clean asset paths):
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-python3 -m http.server 8080
-# then visit http://localhost:8080
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Project structure
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-```
-.
-├── index.html
-├── assets/
-│   ├── css/styles.css
-│   ├── js/main.js
-│   └── images/
-│       ├── banner.png
-│       └── logo.png
-└── README.md
-```
+## Learn More
 
-## Deploy
+To learn more about Next.js, take a look at the following resources:
 
-Already configured for GitHub Pages — push to `main` and the site is live at
-[kravvy.github.io](https://kravvy.github.io).
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
