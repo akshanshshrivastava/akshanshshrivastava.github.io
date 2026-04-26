@@ -14,7 +14,10 @@ interface ProductDetailProps {
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, handler: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -42,8 +45,8 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   };
 
   const handleBuyNow = async () => {
-    if (!window.Razorpay) {
-      alert("Payment system initializing...");
+    if (typeof window === "undefined" || !window.Razorpay) {
+      alert("Payment system is still loading. Please try again in a moment.");
       return;
     }
 
@@ -54,33 +57,69 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: parseFloat(selectedVariant.price.amount),
-          currency: selectedVariant.price.currencyCode,
+          currency: selectedVariant.price.currencyCode || "INR",
         }),
       });
       const order = await res.json();
-      if (!order.id) throw new Error("API Keys missing in .env.local");
+      if (!res.ok || !order.id) {
+        throw new Error(order.error || "Could not create payment order.");
+      }
 
-      const options = {
+      const rzp = new window.Razorpay({
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
         currency: order.currency,
         name: "KRAVVY",
         description: product.title,
         order_id: order.id,
-        handler: async (response: any) => {
-          const vRes = await fetch("/api/razorpay/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...response, product: { variantId: selectedVariant.id, price: selectedVariant.price.amount, quantity: 1 } }),
-          });
-          if ((await vRes.json()).success) window.location.href = "/thank-you";
+        handler: async (response: unknown) => {
+          const r = response as {
+            razorpay_payment_id: string;
+            razorpay_order_id: string;
+            razorpay_signature: string;
+          };
+          try {
+            const vRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...r,
+                product: {
+                  variantId: selectedVariant.id,
+                  price: selectedVariant.price.amount,
+                  quantity: 1,
+                  title: product.title,
+                },
+              }),
+            });
+            const data = await vRes.json();
+            if (!vRes.ok || !data.success) {
+              throw new Error(data.error || "Payment verification failed.");
+            }
+            window.location.href = `/thank-you?payment_id=${encodeURIComponent(r.razorpay_payment_id)}`;
+          } catch (err) {
+            const msg =
+              err instanceof Error ? err.message : "Verification failed.";
+            alert(msg);
+          }
+        },
+        modal: {
+          ondismiss: () => setBuyingNow(false),
         },
         theme: { color: "#ef4444" },
-      };
-      new window.Razorpay(options).open();
-    } catch (err: any) {
-      alert(err.message || "Checkout error.");
-    } finally {
+      });
+
+      rzp.on("payment.failed", (response: unknown) => {
+        const r = response as { error?: { description?: string } };
+        alert(r.error?.description || "Payment failed. Please try again.");
+        setBuyingNow(false);
+      });
+
+      rzp.open();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Checkout error.";
+      console.error("Razorpay error:", err);
+      alert(msg);
       setBuyingNow(false);
     }
   };

@@ -10,7 +10,17 @@ import {
   updateCartQuantity,
   removeFromCart,
   getCartTotal,
+  clearCart,
 } from "@/lib/cart-store";
+
+declare global {
+  interface Window {
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, handler: (response: unknown) => void) => void;
+    };
+  }
+}
 
 export function CartSidebar() {
   const [open, setOpen] = useState(false);
@@ -50,27 +60,85 @@ export function CartSidebar() {
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
-    setCheckingOut(true);
 
-    // Check if items are mock (IDs starting with 'mock-')
-    const isMock = items.some((i) => i.variantId.startsWith("mock-"));
-    if (isMock) {
-      alert("Demo mode: In production, this will redirect to Shopify Checkout.");
-      setCheckingOut(false);
+    if (items.some((i) => i.variantId.startsWith("mock-"))) {
+      alert("Demo mode: connect a real Shopify product to checkout.");
       return;
     }
 
+    if (typeof window === "undefined" || !window.Razorpay) {
+      alert("Payment system is still loading. Please try again in a moment.");
+      return;
+    }
+
+    setCheckingOut(true);
     try {
-      const { createCheckout } = await import("@/lib/shopify");
-      const lineItems = items.map((i) => ({
-        variantId: i.variantId,
-        quantity: i.quantity,
-      }));
-      const checkoutUrl = await createCheckout(lineItems);
-      window.location.href = checkoutUrl;
+      const orderRes = await fetch("/api/razorpay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: total, currency: "INR" }),
+      });
+      const order = await orderRes.json();
+      if (!orderRes.ok || !order.id) {
+        throw new Error(order.error || "Could not create payment order.");
+      }
+
+      const rzp = new window.Razorpay({
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: "KRAVVY",
+        description: `${items.length} item${items.length === 1 ? "" : "s"}`,
+        order_id: order.id,
+        handler: async (response: unknown) => {
+          const r = response as {
+            razorpay_payment_id: string;
+            razorpay_order_id: string;
+            razorpay_signature: string;
+          };
+          try {
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...r,
+                items: items.map((i) => ({
+                  variantId: i.variantId,
+                  quantity: i.quantity,
+                  price: i.price,
+                  title: i.title,
+                })),
+              }),
+            });
+            const data = await verifyRes.json();
+            if (!verifyRes.ok || !data.success) {
+              throw new Error(data.error || "Payment verification failed.");
+            }
+            clearCart();
+            window.location.href = `/thank-you?payment_id=${encodeURIComponent(r.razorpay_payment_id)}`;
+          } catch (err) {
+            const msg =
+              err instanceof Error ? err.message : "Verification failed.";
+            alert(msg);
+          }
+        },
+        modal: {
+          ondismiss: () => setCheckingOut(false),
+        },
+        theme: { color: "#ef4444" },
+      });
+
+      rzp.on("payment.failed", (response: unknown) => {
+        const r = response as { error?: { description?: string } };
+        alert(r.error?.description || "Payment failed. Please try again.");
+        setCheckingOut(false);
+      });
+
+      rzp.open();
     } catch (err) {
-      console.error("Checkout error:", err);
-      alert("Something went wrong creating checkout. Please try again.");
+      const msg = err instanceof Error ? err.message : "Checkout error.";
+      console.error("Razorpay checkout error:", err);
+      alert(msg);
       setCheckingOut(false);
     }
   };
