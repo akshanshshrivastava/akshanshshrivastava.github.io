@@ -39,6 +39,16 @@ const nextConfig: NextConfig = {
         destination: "https://kravvy.myshopify.com/tools/:path*",
         permanent: false,
       },
+      {
+        source: "/customer_identity/:path*",
+        destination: "https://kravvy.myshopify.com/customer_identity/:path*",
+        permanent: false,
+      },
+      {
+        source: "/services/:path*",
+        destination: "https://kravvy.myshopify.com/services/:path*",
+        permanent: false,
+      },
     ];
   },
 };
