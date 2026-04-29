@@ -22,16 +22,16 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "KRAVVY — Own Your Vibe",
-  description: "Dark streetwear for those who move different. Edgy graphics, premium quality, unapologetic style.",
-  keywords: ["streetwear", "dark fashion", "graphic tees", "urban clothing", "kravvy"],
-  openGraph: {
-    title: "KRAVVY — Own Your Vibe",
-    description: "Dark streetwear for those who move different.",
-    type: "website",
-  },
-};
+// export const metadata: Metadata = {
+//   title: "KRAVVY — Own Your Vibe",
+//   description: "Dark streetwear for those who move different. Edgy graphics, premium quality, unapologetic style.",
+//   keywords: ["streetwear", "dark fashion", "graphic tees", "urban clothing", "kravvy"],
+//   openGraph: {
+//     title: "KRAVVY — Own Your Vibe",
+//     description: "Dark streetwear for those who move different.",
+//     type: "website",
+//   },
+// };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
