@@ -15,8 +15,8 @@ export function Navbar() {
     window.addEventListener("cart-updated", updateCart);
     window.addEventListener("storage", updateCart);
 
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener("cart-updated", updateCart);
@@ -31,44 +31,54 @@ export function Navbar() {
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800/50"
-          : "bg-transparent"
-      }`}
+    <header
+      className="fixed left-0 right-0 z-50"
+      style={{
+        top: "var(--bar-height)",
+        height: scrolled ? 56 : 80,
+        background: scrolled ? "var(--color-bg-overlay)" : "transparent",
+        backdropFilter: scrolled ? "saturate(180%) blur(20px)" : "none",
+        WebkitBackdropFilter: scrolled ? "saturate(180%) blur(20px)" : "none",
+        borderBottom: scrolled
+          ? "1px solid rgba(255,255,255,0.06)"
+          : "1px solid transparent",
+        transition: "all 240ms cubic-bezier(0.4,0,0.2,1)",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+      <div className="container-k h-full">
+        <div className="flex items-center justify-between h-full">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl sm:text-3xl font-black tracking-tighter text-white group-hover:text-red-500 transition-colors">
+          <Link href="/" className="flex items-center gap-3 group">
+            <span
+              className="text-2xl sm:text-3xl font-black tracking-tighter text-white group-hover:text-[var(--color-accent)] transition-colors"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
               KRAVVY
             </span>
-            <span className="hidden sm:block text-[10px] font-mono text-zinc-500 tracking-widest uppercase mt-1">
+            <span className="hidden sm:block text-[10px] font-medium tracking-[0.2em] uppercase text-[var(--color-text-muted)] mt-0.5">
               Own Your Vibe
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-8">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/shop">Shop</NavLink>
             <NavLink href="/contact">Contact</NavLink>
-          </div>
+          </nav>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
             <button
               onClick={openCart}
-              className="relative p-2 text-zinc-400 hover:text-white transition-colors"
+              className="relative p-2 text-[var(--color-text-muted)] hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Open cart"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute top-0 right-0 bg-[var(--color-accent)] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -76,7 +86,7 @@ export function Navbar() {
 
             {/* Mobile menu toggle */}
             <button
-              className="md:hidden p-2 text-zinc-400 hover:text-white"
+              className="md:hidden p-2 text-[var(--color-text-muted)] hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle menu"
             >
@@ -95,14 +105,17 @@ export function Navbar() {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div className="md:hidden pb-6 border-t border-zinc-800/50 mt-2 pt-4 space-y-3">
+          <div
+            className="md:hidden pb-6 border-t mt-2 pt-4 space-y-1"
+            style={{ borderColor: "var(--color-border)" }}
+          >
             <MobileNavLink href="/" onClick={() => setMobileOpen(false)}>Home</MobileNavLink>
             <MobileNavLink href="/shop" onClick={() => setMobileOpen(false)}>Shop</MobileNavLink>
             <MobileNavLink href="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileNavLink>
           </div>
         )}
       </div>
-    </nav>
+    </header>
   );
 }
 
@@ -110,10 +123,10 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link
       href={href}
-      className="text-sm font-semibold uppercase tracking-wider text-zinc-400 hover:text-white transition-colors relative group"
+      className="text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--color-text-muted)] hover:text-white transition-colors relative group"
     >
       {children}
-      <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-red-500 group-hover:w-full transition-all duration-300" />
+      <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[var(--color-accent)] group-hover:w-full transition-all duration-300" />
     </Link>
   );
 }
@@ -123,7 +136,7 @@ function MobileNavLink({ href, children, onClick }: { href: string; children: Re
     <Link
       href={href}
       onClick={onClick}
-      className="block text-lg font-semibold uppercase tracking-wider text-zinc-300 hover:text-red-500 transition-colors px-2 py-2"
+      className="block text-lg font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors px-2 py-3 min-h-[44px]"
     >
       {children}
     </Link>

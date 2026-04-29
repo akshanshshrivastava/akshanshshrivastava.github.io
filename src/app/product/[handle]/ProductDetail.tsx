@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShopifyProduct, ShopifyVariant, formatPrice } from "@/lib/shopify";
 import { addToCart } from "@/lib/cart-store";
 import { ProductCard } from "@/components/ProductCard";
+import { TrustRow } from "@/components/TrustRow";
 
 interface ProductDetailProps {
   product: ShopifyProduct;
@@ -44,6 +45,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
+  // ── Razorpay Buy Now (unchanged business logic) ──
   const handleBuyNow = async () => {
     if (typeof window === "undefined" || !window.Razorpay) {
       alert("Payment system is still loading. Please try again in a moment.");
@@ -98,15 +100,12 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
             }
             window.location.href = `/thank-you?payment_id=${encodeURIComponent(r.razorpay_payment_id)}`;
           } catch (err) {
-            const msg =
-              err instanceof Error ? err.message : "Verification failed.";
+            const msg = err instanceof Error ? err.message : "Verification failed.";
             alert(msg);
           }
         },
-        modal: {
-          ondismiss: () => setBuyingNow(false),
-        },
-        theme: { color: "#ef4444" },
+        modal: { ondismiss: () => setBuyingNow(false) },
+        theme: { color: "#E53935" },
       });
 
       rzp.on("payment.failed", (response: unknown) => {
@@ -125,30 +124,59 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12">
+    <div style={{ background: "var(--color-bg)", color: "var(--color-text-primary)", paddingTop: "calc(var(--bar-height) + 80px + 40px)", paddingBottom: 64 }}>
+      <div className="container-k">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Images */}
-          <div className="relative aspect-[3/4] bg-zinc-900 rounded-xl overflow-hidden border border-zinc-800">
-            <Image src={product.images[selectedImage]?.url} alt={product.title} fill className="object-cover" priority />
+          <div>
+            <div
+              className="relative aspect-[3/4] overflow-hidden"
+              style={{ background: "var(--color-bg-card)", borderRadius: "var(--radius-lg)", border: "1px solid var(--color-border)" }}
+            >
+              <Image src={product.images[selectedImage]?.url} alt={product.title} fill className="object-cover" priority />
+            </div>
+            {/* Thumbnails */}
+            {product.images.length > 1 && (
+              <div className="flex gap-3 mt-4">
+                {product.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedImage(i)}
+                    className="relative w-16 h-20 overflow-hidden flex-shrink-0"
+                    style={{
+                      borderRadius: "var(--radius-md)",
+                      border: i === selectedImage ? "2px solid var(--color-accent)" : "1px solid var(--color-border)",
+                      opacity: i === selectedImage ? 1 : 0.6,
+                      transition: "opacity var(--dur-fast), border-color var(--dur-fast)",
+                    }}
+                  >
+                    <Image src={img.url} alt="" fill className="object-cover" sizes="64px" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Info */}
           <div className="flex flex-col justify-center">
-            <h1 className="text-4xl font-black mb-2">{product.title}</h1>
-            <p className="text-2xl text-red-500 font-bold mb-8">{formatPrice(selectedVariant.price.amount)}</p>
+            <span className="text-eyebrow">// {product.productType || "T-Shirt"}</span>
+            <h1 className="text-section-heading mt-2">{product.title}</h1>
+            <p className="text-2xl font-bold mt-3" style={{ color: "var(--color-accent)" }}>
+              {formatPrice(selectedVariant.price.amount)}
+            </p>
 
             {/* Sizes */}
-            <div className="mb-8">
-              <p className="text-sm uppercase font-bold text-zinc-500 mb-4">Select Size</p>
-              <div className="flex gap-3">
+            <div className="mt-8">
+              <p className="text-[11px] uppercase font-semibold tracking-[0.1em] mb-3" style={{ color: "var(--color-text-muted)" }}>
+                Select Size
+              </p>
+              <div className="flex flex-wrap gap-3">
                 {product.variants.map((v) => (
                   <button
                     key={v.id}
                     onClick={() => setSelectedVariant(v)}
-                    className={`px-6 py-3 border-2 rounded-lg font-bold transition-all ${
-                      selectedVariant.id === v.id ? "border-red-500 bg-red-500/10" : "border-zinc-800 hover:border-zinc-600"
-                    }`}
+                    disabled={!v.availableForSale}
+                    className={`size-btn ${selectedVariant.id === v.id ? "active" : ""}`}
                   >
                     {v.selectedOptions.find(o => o.name === "Size")?.value || v.title}
                   </button>
@@ -156,27 +184,54 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
               </div>
             </div>
 
-            {/* Buttons */}
-            <div className="flex gap-4">
+            {/* Action buttons */}
+            <div className="flex gap-4 mt-8">
               <button
                 onClick={handleAddToCart}
-                className={`flex-1 py-4 rounded-lg font-black uppercase tracking-widest transition-all ${
-                  addedToCart ? "bg-green-600" : "bg-red-600 hover:bg-red-500"
-                }`}
+                className="btn-primary flex-1"
+                style={{
+                  background: addedToCart ? "#16a34a" : undefined,
+                  height: 56,
+                }}
               >
                 {addedToCart ? "Added!" : "Add to Cart"}
               </button>
               <button
                 onClick={handleBuyNow}
-                className="flex-1 py-4 border-2 border-zinc-800 rounded-lg font-black uppercase tracking-widest hover:border-red-500 transition-all"
+                disabled={buyingNow}
+                className="btn-ghost flex-1"
+                style={{ height: 56 }}
               >
                 {buyingNow ? "Wait..." : "Buy Now"}
               </button>
             </div>
-            
-            <div className="mt-10 prose prose-invert" dangerouslySetInnerHTML={{ __html: product.descriptionHtml }} />
+
+            {/* Trust Row */}
+            <TrustRow />
+
+            {/* Description */}
+            {product.descriptionHtml && (
+              <div
+                className="mt-8 prose prose-invert prose-sm"
+                style={{ color: "var(--color-text-secondary)" }}
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+              />
+            )}
           </div>
         </div>
+
+        {/* Related products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-24 lg:mt-32">
+            <span className="text-eyebrow">// You May Also Like</span>
+            <h2 className="text-section-heading mt-2 mb-10">More Drops</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+              {relatedProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

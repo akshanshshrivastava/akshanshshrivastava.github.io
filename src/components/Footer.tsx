@@ -1,16 +1,43 @@
 import Link from "next/link";
 
+const MARQUEE_TEXT = "KRAVVY • BUILT DIFFERENT • WORN BY THE BOLD • OWN YOUR VIBE • DARK AESTHETICS • RAW ENERGY • PREMIUM STREETWEAR • ";
+
 export function Footer() {
   return (
-    <footer className="bg-zinc-950 border-t border-zinc-800/30 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer style={{ background: "var(--color-bg)", borderTop: "1px solid var(--color-border)", marginTop: 0 }}>
+      {/* Marquee strip */}
+      <div className="overflow-hidden py-5" style={{ borderBottom: "1px solid var(--color-border)" }}>
+        <div className="marquee-track">
+          {[0, 1].map((i) => (
+            <span
+              key={i}
+              className="text-[14px] sm:text-[18px] font-black tracking-[0.1em] uppercase whitespace-nowrap"
+              style={{ fontFamily: "var(--font-display)", color: "var(--color-text-muted)" }}
+            >
+              {MARQUEE_TEXT.split("•").map((segment, j) => (
+                <span key={j}>
+                  {segment}
+                  {j < MARQUEE_TEXT.split("•").length - 1 && (
+                    <span style={{ color: "var(--color-accent)", margin: "0 8px", fontSize: "18px" }}>✦</span>
+                  )}
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className="container-k py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="md:col-span-2">
-            <h3 className="text-3xl font-black tracking-tighter text-white">
+            <h3
+              className="text-3xl font-black tracking-tighter"
+              style={{ color: "var(--color-text-primary)", fontFamily: "var(--font-display)" }}
+            >
               KRAVVY
             </h3>
-            <p className="text-zinc-500 mt-3 max-w-sm leading-relaxed">
+            <p className="mt-3 max-w-sm leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
               Dark streetwear for those who move different. Not for the faint.
               Every piece tells a story of rebellion and raw energy.
             </p>
@@ -20,10 +47,11 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-800 text-zinc-500 hover:text-red-400 hover:border-red-500/50 transition-all"
+                className="w-10 h-10 flex items-center justify-center rounded-full transition-all min-w-[44px] min-h-[44px]"
+                style={{ border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 017.75 2v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.25-2.5a1 1 0 110 2 1 1 0 010-2z" />
+                  <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.25-2.5a1 1 0 110 2 1 1 0 010-2z" />
                 </svg>
               </a>
             </div>
@@ -31,7 +59,7 @@ export function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] mb-4" style={{ color: "var(--color-text-muted)" }}>
               Quick Links
             </h4>
             <ul className="space-y-3">
@@ -46,56 +74,30 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.14em] mb-4" style={{ color: "var(--color-text-muted)" }}>
               Get in Touch
             </h4>
-            <ul className="space-y-3 text-sm text-zinc-500">
+            <ul className="space-y-3 text-sm">
               <li>
-                <a
-                  href="mailto:support@kravvy.com"
-                  className="hover:text-red-400 transition-colors"
-                >
+                <a href="mailto:support@kravvy.com" className="hover:text-[var(--color-accent)] transition-colors" style={{ color: "var(--color-text-muted)" }}>
                   support@kravvy.com
                 </a>
               </li>
-              <li>India</li>
+              <li style={{ color: "var(--color-text-muted)" }}>India</li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-zinc-800/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-zinc-600 text-center sm:text-left">
+        {/* Bottom bar */}
+        <div className="mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid var(--color-border)" }}>
+          <p className="text-xs text-center sm:text-left" style={{ color: "var(--color-text-muted)" }}>
             © {new Date().getFullYear()} KRAVVY. All rights reserved. Own Your Vibe.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
-            <Link
-              href="/terms"
-              className="text-zinc-500 hover:text-red-400 transition-colors"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/privacy"
-              className="text-zinc-500 hover:text-red-400 transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/refund-policy"
-              className="text-zinc-500 hover:text-red-400 transition-colors"
-            >
-              Refunds
-            </Link>
-            <Link
-              href="/cancellation-policy"
-              className="text-zinc-500 hover:text-red-400 transition-colors"
-            >
-              Cancellations
-            </Link>
-            <span className="text-zinc-700 font-mono hidden lg:inline">
-              BUILT DIFFERENT • WORN BOLD
-            </span>
+            <FooterBottomLink href="/terms">Terms</FooterBottomLink>
+            <FooterBottomLink href="/privacy">Privacy</FooterBottomLink>
+            <FooterBottomLink href="/refund-policy">Refunds</FooterBottomLink>
+            <FooterBottomLink href="/cancellation-policy">Cancellations</FooterBottomLink>
           </div>
         </div>
       </div>
@@ -106,12 +108,17 @@ export function Footer() {
 function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
-      <Link
-        href={href}
-        className="text-sm text-zinc-500 hover:text-red-400 transition-colors"
-      >
+      <Link href={href} className="text-sm hover:text-[var(--color-accent)] transition-colors" style={{ color: "var(--color-text-muted)" }}>
         {children}
       </Link>
     </li>
+  );
+}
+
+function FooterBottomLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} className="hover:text-[var(--color-accent)] transition-colors" style={{ color: "var(--color-text-muted)" }}>
+      {children}
+    </Link>
   );
 }

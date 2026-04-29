@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Barlow_Condensed, DM_Sans } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CartSidebar } from "@/components/CartSidebar";
 
-const inter = Inter({
+const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["700", "800", "900"],
+  variable: "--font-barlow-condensed",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -32,9 +35,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
-      <body className="font-[family-name:var(--font-inter)] antialiased noise">
+    <html lang="en" className={`${barlowCondensed.variable} ${dmSans.variable}`}>
+      <body className="antialiased noise">
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        <AnnouncementBar />
         <Navbar />
         <CartSidebar />
         <main className="min-h-screen">{children}</main>
