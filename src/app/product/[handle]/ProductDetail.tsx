@@ -7,6 +7,8 @@ import { ShopifyProduct, ShopifyVariant, formatPrice } from "@/lib/shopify";
 import { addToCart } from "@/lib/cart-store";
 import { ProductCard } from "@/components/ProductCard";
 import { TrustRow } from "@/components/TrustRow";
+import { CheckoutForm } from "@/components/CheckoutForm";
+import { CustomerInfo } from "@/lib/checkout-validation";
 
 interface ProductDetailProps {
   product: ShopifyProduct;
@@ -29,6 +31,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
   const [selectedImage, setSelectedImage] = useState(0);
   const [addedToCart, setAddedToCart] = useState(false);
   const [buyingNow, setBuyingNow] = useState(false);
+  const [showBuyForm, setShowBuyForm] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({
@@ -45,8 +48,9 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
-  // ── Razorpay Buy Now (unchanged business logic) ──
-  const handleBuyNow = async () => {
+  const handleBuyNowClick = () => setShowBuyForm(true);
+
+  const handleBuyFormSubmit = async (customer: CustomerInfo) => {
     if (typeof window === "undefined" || !window.Razorpay) {
       alert("Payment system is still loading. Please try again in a moment.");
       return;
@@ -74,6 +78,11 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
         name: "KRAVVY",
         description: product.title,
         order_id: order.id,
+        prefill: {
+          name: customer.fullName,
+          email: customer.email,
+          contact: customer.phone,
+        },
         handler: async (response: unknown) => {
           const r = response as {
             razorpay_payment_id: string;
@@ -92,12 +101,14 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                   quantity: 1,
                   title: product.title,
                 },
+                customer,
               }),
             });
             const data = await vRes.json();
             if (!vRes.ok || !data.success) {
               throw new Error(data.error || "Payment verification failed.");
             }
+            setShowBuyForm(false);
             window.location.href = `/thank-you?payment_id=${encodeURIComponent(r.razorpay_payment_id)}`;
           } catch (err) {
             const msg = err instanceof Error ? err.message : "Verification failed.";
@@ -197,7 +208,7 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 {addedToCart ? "Added!" : "Add to Cart"}
               </button>
               <button
-                onClick={handleBuyNow}
+                onClick={handleBuyNowClick}
                 disabled={buyingNow}
                 className="btn-ghost flex-1"
                 style={{ height: 56 }}
@@ -205,6 +216,25 @@ export function ProductDetail({ product, relatedProducts }: ProductDetailProps) 
                 {buyingNow ? "Wait..." : "Buy Now"}
               </button>
             </div>
+
+            {/* Buy Now form overlay */}
+            {showBuyForm && (
+              <div
+                className="mt-6 p-5"
+                style={{
+                  background: "var(--color-bg-card)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-lg)",
+                }}
+              >
+                <CheckoutForm
+                  totalLabel={formatPrice(selectedVariant.price.amount)}
+                  onSubmit={handleBuyFormSubmit}
+                  onBack={() => { setShowBuyForm(false); setBuyingNow(false); }}
+                  disabled={buyingNow}
+                />
+              </div>
+            )}
 
             {/* Trust Row */}
             <TrustRow />
