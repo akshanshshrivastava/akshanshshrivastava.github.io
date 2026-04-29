@@ -9,20 +9,23 @@ export function HeroSection() {
       className="relative flex items-end overflow-hidden"
       style={{ minHeight: "100vh", paddingTop: "calc(var(--bar-height) + 80px)", paddingBottom: 80 }}
     >
-      {/* Banner background (faded) */}
+      {/* Banner: keep art crisp; only a light bottom scrim to blend into the next section + CTAs */}
       <div className="absolute inset-0">
         <Image
           src="/hero-banner.png"
           alt=""
           fill
+          sizes="100vw"
           className="object-cover object-center"
           priority
           quality={100}
+          placeholder="empty"
         />
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, rgba(13,13,13,0.7) 40%, rgba(13,13,13,0.92) 80%, var(--color-bg) 100%)",
+            background:
+              "linear-gradient(to bottom, rgba(13,13,13,0) 0%, rgba(13,13,13,0) 50%, rgba(13,13,13,0.2) 78%, rgba(13,13,13,0.55) 100%)",
           }}
         />
       </div>
