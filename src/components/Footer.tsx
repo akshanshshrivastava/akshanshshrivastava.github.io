@@ -37,8 +37,8 @@ export function Footer() {
             <ul className="space-y-3">
               <FooterLink href="/shop">Shop All</FooterLink>
               <FooterLink href="/contact">Contact Us</FooterLink>
-              <FooterLink href="#">Shipping Policy</FooterLink>
-              <FooterLink href="#">Returns & Exchanges</FooterLink>
+              <FooterLink href="/terms">Terms & Conditions</FooterLink>
+              <FooterLink href="/privacy">Privacy Policy</FooterLink>
             </ul>
           </div>
 
@@ -63,12 +63,26 @@ export function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-zinc-800/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-zinc-600">
+          <p className="text-xs text-zinc-600 text-center sm:text-left">
             © {new Date().getFullYear()} KRAVVY. All rights reserved. Own Your Vibe.
           </p>
-          <p className="text-xs text-zinc-700 font-mono">
-            BUILT DIFFERENT • WORN BOLD
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
+            <Link
+              href="/terms"
+              className="text-zinc-500 hover:text-red-400 transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-zinc-500 hover:text-red-400 transition-colors"
+            >
+              Privacy
+            </Link>
+            <span className="text-zinc-700 font-mono hidden sm:inline">
+              BUILT DIFFERENT • WORN BOLD
+            </span>
+          </div>
         </div>
       </div>
     </footer>
