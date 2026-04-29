@@ -17,7 +17,7 @@ export function HeroSection() {
           fill
           className="object-cover object-center"
           priority
-          quality={85}
+          quality={100}
         />
         <div
           className="absolute inset-0"
