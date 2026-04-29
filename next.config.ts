@@ -45,6 +45,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/customer_authentication/:path*",
+        destination: "https://kravvy.myshopify.com/customer_authentication/:path*",
+        permanent: false,
+      },
+      {
         source: "/services/:path*",
         destination: "https://kravvy.myshopify.com/services/:path*",
         permanent: false,
