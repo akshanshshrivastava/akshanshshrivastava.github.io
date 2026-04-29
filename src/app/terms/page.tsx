@@ -104,31 +104,50 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section title="6. Returns, Exchanges &amp; Refunds">
-            <ul className="list-disc list-outside ml-5 space-y-2">
+          <Section title="6. Cancellations, Returns &amp; Refunds">
+            <p>
+              <strong>All sales are final.</strong> KRAVVY does not offer
+              monetary refunds once an order has been paid for. Specific
+              rules apply for cancellations and returns:
+            </p>
+            <ul className="list-disc list-outside ml-5 space-y-2 mt-3">
               <li>
-                Returns or exchanges are accepted within{" "}
-                <strong>7 days</strong> of delivery, only for unworn, unwashed
-                items in original packaging with tags intact.
+                Orders may be cancelled within <strong>2 hours</strong> of
+                being placed. After this window, orders cannot be cancelled.
+                Cancellation stops the order from shipping but does not
+                result in a refund. See our{" "}
+                <Link
+                  href="/cancellation-policy"
+                  className="text-red-400 hover:underline"
+                >
+                  Cancellation Policy
+                </Link>{" "}
+                for full details.
               </li>
               <li>
-                Sale items, innerwear, and items marked &ldquo;Final Sale&rdquo;
-                are not eligible for return or exchange.
+                Returns are accepted only at the customer&rsquo;s expense and
+                do not entitle the customer to a refund. They may, at
+                KRAVVY&rsquo;s sole discretion, be eligible for a size
+                exchange or store credit. See our{" "}
+                <Link
+                  href="/refund-policy"
+                  className="text-red-400 hover:underline"
+                >
+                  Refund Policy
+                </Link>{" "}
+                for the full process and conditions.
               </li>
               <li>
-                If you receive a damaged or incorrect product, contact us at{" "}
+                If you receive a damaged, defective, or incorrect product,
+                contact us at{" "}
                 <a
                   href="mailto:support@kravvy.com"
                   className="text-red-400 hover:underline"
                 >
                   support@kravvy.com
                 </a>{" "}
-                within 48 hours of delivery with photos. We will arrange a
-                replacement or refund.
-              </li>
-              <li>
-                Approved refunds are processed back to the original payment
-                method via Razorpay within 7&ndash;10 business days.
+                within 48 hours of delivery with photographs. We will arrange
+                a replacement at our cost.
               </li>
             </ul>
           </Section>

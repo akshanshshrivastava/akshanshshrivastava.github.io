@@ -39,6 +39,8 @@ export function Footer() {
               <FooterLink href="/contact">Contact Us</FooterLink>
               <FooterLink href="/terms">Terms & Conditions</FooterLink>
               <FooterLink href="/privacy">Privacy Policy</FooterLink>
+              <FooterLink href="/refund-policy">Refund Policy</FooterLink>
+              <FooterLink href="/cancellation-policy">Cancellation Policy</FooterLink>
             </ul>
           </div>
 
@@ -79,7 +81,19 @@ export function Footer() {
             >
               Privacy
             </Link>
-            <span className="text-zinc-700 font-mono hidden sm:inline">
+            <Link
+              href="/refund-policy"
+              className="text-zinc-500 hover:text-red-400 transition-colors"
+            >
+              Refunds
+            </Link>
+            <Link
+              href="/cancellation-policy"
+              className="text-zinc-500 hover:text-red-400 transition-colors"
+            >
+              Cancellations
+            </Link>
+            <span className="text-zinc-700 font-mono hidden lg:inline">
               BUILT DIFFERENT • WORN BOLD
             </span>
           </div>
