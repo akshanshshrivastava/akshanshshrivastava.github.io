@@ -30,20 +30,8 @@ export function HeroSection() {
       {/* Content — bottom-left aligned */}
       <div className="relative z-10 container-k w-full">
         <div className="max-w-2xl">
-          <span className="text-eyebrow animate-fade-in-up opacity-0">
-            // Streetwear Redefined
-          </span>
-
-          <h1
-            className="text-hero mt-4 animate-fade-in-up opacity-0 animate-delay-100"
-            style={{ color: "var(--color-text-primary)" }}
-          >
-            Own Your Vibe
-          </h1>
-
-          <p className="mt-5 text-base sm:text-lg leading-relaxed max-w-lg animate-fade-in-up opacity-0 animate-delay-200" style={{ color: "var(--color-text-secondary)" }}>
-            Dark aesthetics. Raw energy. Premium streetwear for those who refuse to blend in.
-          </p>
+          {/* Preserve CTA placement after removing hero copy */}
+          <div className="h-[220px] sm:h-[250px]" aria-hidden="true" />
 
           <div className="flex flex-col sm:flex-row items-start gap-4 mt-8 animate-fade-in-up opacity-0 animate-delay-300">
             <Link href="/shop" className="btn-primary text-base px-8 py-4">
