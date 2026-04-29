@@ -136,7 +136,7 @@ export function CheckoutForm({ totalLabel, onSubmit, onBack, disabled }: Checkou
             type="text"
             autoComplete="name"
             maxLength={100}
-            placeholder="Akshansh Shrivastava"
+            placeholder="Full name"
             value={form.fullName}
             onChange={(e) => update("fullName", e.target.value)}
             onBlur={() => blur("fullName")}

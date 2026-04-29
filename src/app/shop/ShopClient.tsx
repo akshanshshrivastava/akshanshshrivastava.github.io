@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { ShopifyProduct } from "@/lib/shopify";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -10,6 +11,14 @@ interface ShopClientProps {
 
 export function ShopClient({ products }: ShopClientProps) {
   const [search, setSearch] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("focus") === "search" && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchParams]);
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedColor, setSelectedColor] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("newest");
@@ -134,6 +143,7 @@ export function ShopClient({ products }: ShopClientProps) {
               />
             </svg>
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search by name, tag, style..."
               value={search}
