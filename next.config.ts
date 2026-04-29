@@ -40,21 +40,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: "/customer_identity/logout",
-        destination: "https://shopify.com/76970131627/account/logout",
-        permanent: false,
-      },
-      {
-        source: "/customer_identity/:path*",
-        destination: "https://shopify.com/76970131627/account",
-        permanent: false,
-      },
-      {
-        source: "/customer_authentication/:path*",
-        destination: "https://shopify.com/76970131627/account",
-        permanent: false,
-      },
-      {
         source: "/services/:path*",
         destination: "https://kravvy.myshopify.com/services/:path*",
         permanent: false,

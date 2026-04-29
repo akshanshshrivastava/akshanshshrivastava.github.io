@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCartCount } from "@/lib/cart-store";
 
-const SHOPIFY_ACCOUNT_URL = "https://shopify.com/76970131627/account";
-
 export function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
@@ -82,17 +80,6 @@ export function Navbar() {
               </svg>
             </Link>
 
-            {/* Account (Shopify hosted) */}
-            <a
-              href={SHOPIFY_ACCOUNT_URL}
-              className="p-2 text-[var(--color-text-muted)] hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label="My account"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-              </svg>
-            </a>
-
             {/* Cart */}
             <button
               onClick={openCart}
@@ -137,13 +124,6 @@ export function Navbar() {
             <MobileNavLink href="/" onClick={() => setMobileOpen(false)}>Home</MobileNavLink>
             <MobileNavLink href="/shop" onClick={() => setMobileOpen(false)}>Shop</MobileNavLink>
             <MobileNavLink href="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileNavLink>
-            <a
-              href={SHOPIFY_ACCOUNT_URL}
-              onClick={() => setMobileOpen(false)}
-              className="block text-lg font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors px-2 py-3 min-h-[44px]"
-            >
-              My Account
-            </a>
           </div>
         )}
       </div>
