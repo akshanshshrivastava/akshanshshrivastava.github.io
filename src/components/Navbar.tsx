@@ -85,8 +85,6 @@ export function Navbar() {
             {/* Account (Shopify hosted) */}
             <a
               href={SHOPIFY_ACCOUNT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="p-2 text-[var(--color-text-muted)] hover:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="My account"
             >
@@ -141,8 +139,6 @@ export function Navbar() {
             <MobileNavLink href="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileNavLink>
             <a
               href={SHOPIFY_ACCOUNT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               className="block text-lg font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors px-2 py-3 min-h-[44px]"
             >
