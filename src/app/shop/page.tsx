@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getAllProducts, ShopifyProduct } from "@/lib/shopify";
 
 import { ShopClient } from "./ShopClient";
@@ -17,7 +18,9 @@ export default async function ShopPage() {
     products = [];
   }
 
-  const displayProducts = products;
-
-  return <ShopClient products={displayProducts} />;
+  return (
+    <Suspense>
+      <ShopClient products={products} />
+    </Suspense>
+  );
 }
